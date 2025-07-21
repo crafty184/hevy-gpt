@@ -1,0 +1,23 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Hevy Gym Workout Planner",
+  "name_for_model": "hevy",
+  "description_for_human": "Generate and manage custom gym workout plans in your Hevy account.",
+  "description_for_model": "Plugin to fetch, create, and update workouts, routines, exercise templates, routine folders, and webhooks via the Hevy API.",
+  "auth": {
+    "type": "api_key",
+    "api_key": {
+      "in": "header",
+      "name": "api-key"
+    }
+  },
+  "api": {
+    "url": "https://api.hevyapp.com",
+    "is_user_authenticated": true,
+    "spec": "openapi.yaml"
+  },
+  "logo_url": "https://raw.githubusercontent.com/hevyapp/hevy-gpt/main/logo.png",
+  "contact_email": "support@hevyapp.com",
+  "legal_info_url": "https://hevy.com/terms"
+}
+

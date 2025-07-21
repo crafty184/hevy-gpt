@@ -1,0 +1,254 @@
+openapi: 3.0.1
+info:
+  title: Hevy Public API
+  version: "0.0.1"
+  description: |
+    Hevy’s public REST API (alpha).  
+    Requires a Pro‑level API key from https://hevy.com/settings?developer.
+servers:
+  - url: https://api.hevyapp.com/v1
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: api-key
+security:
+  - apiKeyAuth: []
+
+paths:
+  /workouts:
+    get:
+      summary: Get a paginated list of workouts
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create a new workout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostWorkoutsRequestBody'
+      responses:
+        "201":
+          description: Created
+
+  /workouts/count:
+    get:
+      summary: Get the total number of workouts on the account
+      responses:
+        "200":
+          description: OK
+
+  /workouts/events:
+    get:
+      summary: Retrieve workout events since a given date
+      parameters:
+        - in: query
+          name: since
+          schema:
+            type: string
+            format: date-time
+      responses:
+        "200":
+          description: OK
+
+  /workouts/{workoutId}:
+    parameters:
+      - in: path
+        name: workoutId
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a single workout’s details
+      responses:
+        "200":
+          description: OK
+    put:
+      summary: Update an existing workout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatedWorkout'
+      responses:
+        "200":
+          description: Updated
+
+  /routines:
+    get:
+      summary: Get a paginated list of routines
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create a new routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRoutinesRequestBody'
+      responses:
+        "201":
+          description: Created
+
+  /routines/{routineId}:
+    parameters:
+      - in: path
+        name: routineId
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a routine by its Id
+      responses:
+        "200":
+          description: OK
+    put:
+      summary: Update an existing routine
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutRoutinesRequestBody'
+      responses:
+        "200":
+          description: Updated
+
+  /exercise_templates:
+    get:
+      summary: List exercise templates
+      responses:
+        "200":
+          description: OK
+
+  /exercise_templates/{exerciseTemplateId}:
+    parameters:
+      - in: path
+        name: exerciseTemplateId
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a single exercise template
+      responses:
+        "200":
+          description: OK
+
+  /routine_folders:
+    get:
+      summary: List routine folders
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create a new routine folder
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRoutineFolderRequestBody'
+      responses:
+        "201":
+          description: Created
+
+  /routine_folders/{folderId}:
+    parameters:
+      - in: path
+        name: folderId
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get a single routine folder
+      responses:
+        "200":
+          description: OK
+
+  /webhook-subscription:
+    get:
+      summary: Get the current webhook subscription
+      responses:
+        "200":
+          description: OK
+    post:
+      summary: Create a webhook subscription
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookRequestBody'
+      responses:
+        "201":
+          description: Created
+    delete:
+      summary: Delete the webhook subscription
+      responses:
+        "204":
+          description: No Content
+
+components:
+  schemas:
+    PostWorkoutsRequestBody:
+      type: object
+      properties:
+        sets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostWorkoutsRequestSet'
+    PostWorkoutsRequestSet:
+      type: object
+      properties:
+        exerciseId:
+          type: string
+        reps:
+          type: integer
+
+    UpdatedWorkout:
+      type: object
+      description: Same schema as Workout but allows updates.
+
+    PostRoutinesRequestBody:
+      type: object
+      properties:
+        sets:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostRoutinesRequestSet'
+    PostRoutinesRequestSet:
+      type: object
+      properties:
+        exerciseId:
+          type: string
+        reps:
+          type: integer
+
+    PutRoutinesRequestBody:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PostRoutinesRequestBody'
+
+    PostRoutineFolderRequestBody:
+      type: object
+      properties:
+        name:
+          type: string
+
+    WebhookRequestBody:
+      type: object
+      properties:
+        url:
+          type: string
+        events:
+          type: array
+          items:
+            type: string
+
